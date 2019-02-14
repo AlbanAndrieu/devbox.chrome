@@ -17,5 +17,5 @@ galaxy_info:
     versions:
       - all
   - name: elementary os
-  categories:
+  galaxy_tags:
     - system

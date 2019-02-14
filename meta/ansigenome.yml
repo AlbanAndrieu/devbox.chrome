@@ -20,7 +20,7 @@ galaxy_info:
   galaxy_tags:
     - development
     - browser
-    
+
 ansigenome_info:
   github_url: "https://github.com/alourie/devbox.chrome"
   git_branch: "master"
@@ -45,7 +45,7 @@ ansigenome_info:
 
     ### Requirements
 
-	```
+    ```
     python-pycurl and python-software-properties installed.
     ```
 
