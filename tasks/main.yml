@@ -57,7 +57,7 @@
     - libXScrnSaver
   become: yes
   changed_when: false
-  
+
 - name: Enable Yum repo for Google Chrome (yum)
   copy: dest=/etc/yum.repos.d/google-chrome.repo src=google-chrome.repo
   when: ( ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux' ) and google_chrome_stable_enabled
@@ -82,9 +82,24 @@
   when: ( ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux' ) and google_talkplugin_enabled
   become: yes
 
-- name: Install Google remote desktop Plugin
-  action: "{{ ansible_pkg_mgr }} name={{ item }} state={{ google_agent_pkg_state|default('present') }}"
+#- name: Install Google remote desktop
+#  action: "{{ ansible_pkg_mgr }} name={{ item }} state={{ google_agent_pkg_state|default('present') }}"
+#  when: ( ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' ) and google_remotedesktop_enabled
+#  with_items:
+#   - chrome-remote-desktop
+#  become: yes
+
+- name: Install Google remote desktop (1)
+  get_url: 
+    url: "{{ google_remotedesktop_url }}"
+    dest: ./chrome-remote-desktop_current_amd64.deb
   when: ( ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' ) and google_remotedesktop_enabled
-  with_items:
-   - chrome-remote-desktop
   become: yes
+
+- name: Install Google remote desktop (2)
+  command: apt install ./chrome-remote-desktop_current_amd64.deb
+  when: ( ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' ) and google_remotedesktop_enabled
+  become: yes
+
+- name: Enable Google remote desktop
+  debug: msg="Go to https://remotedesktop.google.com/access/"
