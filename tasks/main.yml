@@ -81,3 +81,10 @@
    - google-talkplugin
   when: ( ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux' ) and google_talkplugin_enabled
   become: yes
+
+- name: Install Google remote desktop Plugin
+  action: "{{ ansible_pkg_mgr }} name={{ item }} state={{ google_agent_pkg_state|default('present') }}"
+  when: ( ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' ) and google_remotedesktop_enabled
+  with_items:
+   - chrome-remote-desktop
+  become: yes
