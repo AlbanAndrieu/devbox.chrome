@@ -2,9 +2,10 @@
 
 - name: Remove duplicate entry.
   file: name=/etc/apt/sources.list.d/{{ item }} state=absent
-  become: yes
   when: ( ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' )
   with_items: "{{ google_repo_files }}"
+  become: yes
+  ignore_errors: yes
 
 - name: Add Google Chrome key (apt)
   apt_key: url=https://dl-ssl.google.com/linux/linux_signing_key.pub state={{ google_agent_repository_state|default('yes') }}
@@ -90,7 +91,7 @@
 #  become: yes
 
 - name: Install Google remote desktop (1)
-  get_url: 
+  get_url:
     url: "{{ google_remotedesktop_url }}"
     dest: ./chrome-remote-desktop_current_amd64.deb
   when: ( ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' ) and google_remotedesktop_enabled
