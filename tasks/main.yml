@@ -20,7 +20,7 @@
 #Issue https://askubuntu.com/questions/724093/no-more-updates-for-google-chrome-apt-get-update-error
 #TODO
 #sudo sed -i -e 's/deb http/deb [arch=amd64] http/' "/etc/apt/sources.list.d/google-chrome.list" "/opt/google/chrome/cron/google-chrome"
-- name: Fix Google drop support for 32 bits
+- name: Fix Google drop support for 32 bits # noqa 303
   command: sed -i -e 's/deb http/deb [arch=amd64] http/' "/etc/apt/sources.list.d/dl_google_com_linux_chrome_deb.list"
   when: ( ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' ) and ( google_chrome_stable_enabled or google_talkplugin_enabled )
   changed_when: false
@@ -43,6 +43,9 @@
   apt_repository: repo="deb http://dl.google.com/linux/talkplugin/deb/ stable main" update_cache=yes state={{ google_agent_repository_state }}
   when: ( ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' )  and ( google_chrome_stable_enabled or google_talkplugin_enabled )
   become: yes
+  tags:
+    - talkplugin
+    - vm
 
 - name: Install Google Talk Plugin (apt)
   action: "{{ ansible_pkg_mgr }} name={{ item }} state={{ google_agent_pkg_state|default('present') }}"
@@ -50,6 +53,9 @@
   with_items:
    - google-talkplugin
   become: yes
+  tags:
+    - talkplugin
+    - vm
 
 - name: Install google-chrome-stable prerequisite
   action: "{{ ansible_pkg_mgr }} name={{ item }} state={{ jenkins_pkg_state|default('present') }}"
@@ -75,6 +81,9 @@
   copy: dest=/etc/yum.repos.d/google-talkplugin.repo src=google-talkplugin.repo
   when: ( ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux' ) and google_talkplugin_enabled
   become: yes
+  tags:
+    - talkplugin
+    - vm
 
 - name: Install Google Talk Plugin (yum)
   action: "{{ ansible_pkg_mgr }} name={{ item }} state={{ google_agent_pkg_state|default('present') }}"
@@ -82,6 +91,9 @@
    - google-talkplugin
   when: ( ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux' ) and google_talkplugin_enabled
   become: yes
+  tags:
+    - talkplugin
+    - vm
 
 #- name: Install Google remote desktop
 #  action: "{{ ansible_pkg_mgr }} name={{ item }} state={{ google_agent_pkg_state|default('present') }}"
@@ -96,11 +108,20 @@
     dest: ./chrome-remote-desktop_current_amd64.deb
   when: ( ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' ) and google_remotedesktop_enabled
   become: yes
+  tags:
+    - remotedesktop
+    - vm
 
 - name: Install Google remote desktop (2)
   command: apt install ./chrome-remote-desktop_current_amd64.deb
   when: ( ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' ) and google_remotedesktop_enabled
   become: yes
+  tags:
+    - remotedesktop
+    - vm
 
 - name: Enable Google remote desktop
   debug: msg="Go to https://remotedesktop.google.com/access/"
+  tags:
+    - remotedesktop
+    - vm
