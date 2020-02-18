@@ -113,7 +113,7 @@
     - vm
 
 - name: Install Google remote desktop (2)
-  command: apt install ./chrome-remote-desktop_current_amd64.deb
+  command: apt install -y ./chrome-remote-desktop_current_amd64.deb
   when: ( ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' ) and google_remotedesktop_enabled
   become: yes
   tags:
