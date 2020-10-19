@@ -9,12 +9,15 @@
 
 - name: Add Google Chrome key (apt)
   apt_key: url=https://dl-ssl.google.com/linux/linux_signing_key.pub state={{ google_agent_repository_state|default('yes') }}
-  when: ( ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' ) and ( google_chrome_stable_enabled or google_talkplugin_enabled ) and not proxy_enabled
+  when: ( ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' ) and ( google_chrome_stable_enabled or google_talkplugin_enabled )
+        and ((http_proxy is undefined) or (http_proxy is none))
   become: yes
 
 - name: Add Google Chrome key (apt) (proxy)
   apt_key: url=https://dl-ssl.google.com/linux/linux_signing_key.pub state={{ google_agent_repository_state|default('yes') }}
-  when: ( ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' ) and ( google_chrome_stable_enabled or google_talkplugin_enabled ) and proxy_enabled
+  when: ( ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' ) and ( google_chrome_stable_enabled or google_talkplugin_enabled )
+        and not( (http_proxy is undefined) or (http_proxy is none) )
+        and (http_proxy | length > 0)
   environment:
     http_proxy: "{{ http_proxy }}"
     https_proxy: "{{ https_proxy }}"
@@ -22,12 +25,15 @@
 
 - name: Add Google Chrome repo (apt)
   apt_repository: repo="deb http://dl.google.com/linux/chrome/deb/ stable main" state={{ google_agent_repository_state|default('yes') }} update_cache=no
-  when: ( ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' ) and ansible_architecture in ['x86_64'] and ( google_chrome_stable_enabled or google_talkplugin_enabled ) and not proxy_enabled
+  when: ( ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' ) and ansible_architecture in ['x86_64'] and ( google_chrome_stable_enabled or google_talkplugin_enabled )
+        and ((http_proxy is undefined) or (http_proxy is none))
   become: yes
 
 - name: Add Google Chrome repo (apt) (proxy)
   apt_repository: repo="deb http://dl.google.com/linux/chrome/deb/ stable main" state={{ google_agent_repository_state|default('yes') }} update_cache=no
-  when: ( ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' ) and ansible_architecture in ['x86_64'] and ( google_chrome_stable_enabled or google_talkplugin_enabled ) and proxy_enabled
+  when: ( ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' ) and ansible_architecture in ['x86_64'] and ( google_chrome_stable_enabled or google_talkplugin_enabled )
+        and not( (http_proxy is undefined) or (http_proxy is none) )
+        and (http_proxy | length > 0)
   environment:
     http_proxy: "{{ http_proxy }}"
     https_proxy: "{{ https_proxy }}"
