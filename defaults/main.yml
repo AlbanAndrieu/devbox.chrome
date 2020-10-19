@@ -2,6 +2,7 @@
 google_chrome_stable_enabled: yes                       # Enable module
 google_talkplugin_enabled: no                           # Disable module
 google_remotedesktop_enabled: no                        # Disable module
+proxy_enabled: no                                       # Disable proxy, issue https://github.com/ansible/ansible/issues/31691
 # Package states: present or installed or latest
 google_agent_pkg_state: present
 # Repository states: present or absent
@@ -15,4 +16,6 @@ docker_files_generated_directory         : "roles/chrome"
 docker_volume_directory                  : ""
 docker_working_directory                 : "/home/vagrant"
 docker_image_name                        : "nabla/ansible-chrome"
-google_remotedesktop_url: "https://dl.google.com/linux/direct/chrome-remote-desktop_current_amd64.deb" 
+google_remotedesktop_url: "https://dl.google.com/linux/direct/chrome-remote-desktop_current_amd64.deb"
+http_proxy: "http://proxy.example.com:8080"
+https_proxy: "{{ http_proxy }}"
